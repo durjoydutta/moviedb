@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import StarIcon from "./StarIcon.jsx";
 
 const MovieCard = ({
-  id,
   title,
   vote_average,
   poster_path,
   release_date,
   genre_ids,
   overview,
+  adult,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -38,7 +38,7 @@ const MovieCard = ({
 
   return (
     <div
-      className={`bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-300 ${
+      className={`bg-gray-800 rounded-lg shadow-lg overflow-scroll transition-all duration-300 ${
         isExpanded ? "max-h-screen" : "max-h-[500px]"
       }`}
       onClick={() => setIsExpanded(!isExpanded)}>
@@ -47,8 +47,14 @@ const MovieCard = ({
         alt={title}
         className="w-full h-80 object-cover"
       />
-      <div className="p-4">
+      <div className="p-4 relative">
         <h2 className="text-lg font-bold truncate">{title}</h2>
+        {/* Adult Tag */}
+        {adult && (
+          <div className="absolute top-4 right-4 bg-black text-gold-500 border border-gold-500 text-xs font-bold px-2 py-1 rounded">
+            A
+          </div>
+        )}
         <div className="flex items-center text-gray-400 mt-2">
           <StarIcon className="w-5 h-5 text-yellow-500 mr-1" />
           <span>{vote_average.toFixed(1)}</span>
