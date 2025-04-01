@@ -1,54 +1,64 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Search from "./components/Search.jsx";
 import Spinner from "./components/Spinner.jsx";
 import MovieCard from "./components/MovieCard.jsx";
 import Pagination from "./components/Pagination.jsx";
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-const DISCOVER_MOVIE_URL = "https://api.themoviedb.org/3/discover/movie";
+const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+const DISCOVER_URL = (page) =>
+  `${TMDB_BASE_URL}/discover/movie?include_adult=true&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`;
+const SEARCH_URL = (query) =>
+  `${TMDB_BASE_URL}/search/movie?query=${encodeURIComponent(
+    query
+  )}&include_adult=true&include_video=false&language=en-US&page=1&sort_by=popularity.desc`;
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [movieCount, setMovieCount] = useState("1000000+");
+  const [movieCount, setMovieCount] = useState(0);
   const [page, setPage] = useState(1);
 
-  const url = `${DISCOVER_MOVIE_URL}?include_adult=true&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`;
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${API_KEY}`,
+  const fetchMovies = useCallback(
+    async (query = "") => {
+      try {
+        const url = query ? SEARCH_URL(query) : DISCOVER_URL(page);
+        const options = {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${API_KEY}`,
+          },
+        };
+        const res = await fetch(url, options);
+        if (!res.ok) {
+          throw new Error("Failed to fetch movies");
+        }
+        const data = await res.json();
+        if (data.results?.length > 0) {
+          setMovies(data.results);
+          setMovieCount(data.total_results);
+        } else {
+          setMovies([]);
+          setErrorMessage("No movies found.");
+        }
+      } catch (err) {
+        console.error("Error fetching movies:", err);
+        setMovies([]);
+        setErrorMessage("Failed to fetch movies. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
     },
-  };
-
-  const fetchMovies = async () => {
-    try {
-      const res = await fetch(url, options);
-      if (!res.ok) {
-        throw new Error("Failed to fetch movies");
-      }
-      const data = await res.json();
-      if (data.results?.length > 0) {
-        setMovies(data.results);
-        setMovieCount(data.total_results);
-      } else {
-        setErrorMessage("No movies found.");
-      }
-    } catch (err) {
-      console.error("Error fetching movies:", err);
-      setErrorMessage("Failed to fetch movies. Please try again later.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    [page]
+  );
 
   useEffect(() => {
     setIsLoading(true);
-    setTimeout(fetchMovies, 1000);
-  }, [page]);
+    fetchMovies(searchTerm);
+  }, [searchTerm, page, fetchMovies]);
 
   return (
     <main className="bg-gray-900 text-white min-h-screen">
@@ -77,19 +87,15 @@ const App = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {movies
-                .filter((movie) =>
-                  movie.title.toLowerCase().includes(searchTerm.toLowerCase())
-                )
-                .map((movie) => (
-                  <MovieCard
-                    key={movie.id}
-                    id={movie.id}
-                    title={movie.title}
-                    vote_average={movie.vote_average}
-                    poster_path={movie.poster_path}
-                  />
-                ))}
+              {movies.map((movie) => (
+                <MovieCard
+                  key={movie.id}
+                  id={movie.id}
+                  title={movie.title}
+                  vote_average={movie.vote_average}
+                  poster_path={movie.poster_path}
+                />
+              ))}
             </div>
           )}
         </section>

@@ -1,6 +1,6 @@
 import React from "react";
 
-const MovieCard = ({ id, title, vote_average, poster_path }) => {
+const MovieCard = ({movie: id, title, vote_average, poster_path }) => {
   return (
     <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
       <img

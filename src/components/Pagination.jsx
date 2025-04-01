@@ -1,8 +1,8 @@
 import React from "react";
 
 const Pagination = ({ page, setPage }) => {
-  const totalPages = 10; // Example: Adjust this based on your API's total pages
-  const visiblePages = 5; // Number of visible page buttons
+  const totalPages = 10;
+  const visiblePages = 5; 
 
   const getPageNumbers = () => {
     const start = Math.max(1, page - Math.floor(visiblePages / 2));
@@ -24,8 +24,7 @@ const Pagination = ({ page, setPage }) => {
             : "bg-red-500 text-white hover:bg-red-600"
         }`}
         onClick={() => page > 1 && setPage(page - 1)}
-        disabled={page === 1}
-      >
+        disabled={page === 1}>
         Previous
       </button>
 
@@ -38,8 +37,7 @@ const Pagination = ({ page, setPage }) => {
               ? "bg-red-500 text-white font-bold"
               : "bg-gray-800 text-gray-300 hover:bg-gray-700"
           }`}
-          onClick={() => setPage(pageNumber)}
-        >
+          onClick={() => setPage(pageNumber)}>
           {pageNumber}
         </button>
       ))}
@@ -52,8 +50,7 @@ const Pagination = ({ page, setPage }) => {
             : "bg-red-500 text-white hover:bg-red-600"
         }`}
         onClick={() => page < totalPages && setPage(page + 1)}
-        disabled={page === totalPages}
-      >
+        disabled={page === totalPages}>
         Next
       </button>
     </div>
