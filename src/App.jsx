@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
+import Header from "./components/Header.jsx";
+import Footer from "./components/Footer.jsx";
 import Search from "./components/Search.jsx";
 import Spinner from "./components/Spinner.jsx";
 import MovieCard from "./components/MovieCard.jsx";
@@ -61,8 +63,9 @@ const App = () => {
   }, [searchTerm, page, fetchMovies]);
 
   return (
-    <main className="bg-gray-900 text-white min-h-screen">
-      <div className="container mx-auto px-4 py-8">
+    <div className="bg-gray-900 text-white min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-grow container mx-auto px-4 py-8">
         <header className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-4">
             Find <span className="text-red-500">Movies</span> You'll Enjoy
@@ -102,8 +105,9 @@ const App = () => {
             </div>
           )}
         </section>
-      </div>
-    </main>
+      </main>
+      <Footer />
+    </div>
   );
 };
 
