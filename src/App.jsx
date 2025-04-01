@@ -94,6 +94,9 @@ const App = () => {
                   title={movie.title}
                   vote_average={movie.vote_average}
                   poster_path={movie.poster_path}
+                  release_date={movie.release_date}
+                  genre_ids={movie.genre_ids}
+                  overview={movie.overview}
                 />
               ))}
             </div>
