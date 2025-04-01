@@ -1,6 +1,7 @@
 # 🎥 MovieDB
 
-![MovieDB Banner](https://via.placeholder.com/1200x300?text=MovieDB+-+Your+Movie+Database)
+![MovieDB Banner](https://github.com/user-attachments/assets/8cbe123c-269d-4b01-a175-7cde41216a63)
+
 
 ## 🌟 Overview
 
